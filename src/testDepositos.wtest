@@ -1,0 +1,81 @@
+import depositos.*
+import accesorios.*
+import bicis.*
+
+describe "Deposito de bicis" {
+	
+	/* Accesorios */
+	const farolito = new Farolito()
+	const canastoVol8 = new Canasto(volumen=8)
+	const morralLargo21ConOjo = new Morral(largo=21,tieneOjoDeGato=true)
+	const morralLargo6SinOjo = new Morral(largo=6,tieneOjoDeGato=false)
+	
+	/* Bicicletas */
+	const bici1 = new Bici(largo=150,rodado=28,marca="Olmo",accesorios=[farolito])
+	const bici2 = new Bici(largo=110,rodado=26,marca="Legnano",accesorios=[farolito,canastoVol8,morralLargo21ConOjo])
+	const bici3 = new Bici(largo=90,rodado=20,marca="Legnano",accesorios=[morralLargo6SinOjo])
+	
+	/* Depositos */
+	const depositoA = new Deposito()
+	const depositoB = new Deposito()
+
+	method initialize() {
+		depositoA.agregarBicis([bici1,bici2,bici3])
+		depositoB.agregarBicis([bici1, bici2])
+	}
+	
+	test "Olmo r28 de 150cm de largo" {
+		assert.equals(bici1.altura(), 85)
+		assert.equals(bici1.velocidadCrucero(),34)
+		assert.equals(bici1.carga(),0)
+		assert.equals(bici1.peso(), 14.5)
+		assert.that(bici1.tieneLuz())
+		assert.equals(bici1.cantidadDeAccesoriosLivianos(),1)
+	}
+	
+	test "Legnano r26 de 110cm de largo" {
+		assert.equals(bici2.altura(),80)
+		assert.equals(bici2.velocidadCrucero(),28)
+		assert.equals(bici2.peso(),15.5)
+		assert.equals(bici2.carga(),23)
+		assert.that(bici2.tieneLuz())
+		assert.equals(bici2.cantidadDeAccesoriosLivianos(),2)
+	}
+	
+	test "Legnano r20 de 90cm de largo" {
+		assert.equals(bici3.altura(),65)
+		assert.equals(bici3.velocidadCrucero(),22)
+		assert.equals(bici3.carga(),2)
+		assert.equals(bici3.peso(),11.2)
+		assert.notThat(bici3.tieneLuz())
+		assert.equals(bici3.cantidadDeAccesoriosLivianos(),0)
+	}
+	
+	test "Hay bicis compañeras en el deposito" {
+		const bici4 = new Bici(largo=147,rodado=28,marca="Olmo")
+		depositoA.agregarBicis([bici4])
+		assert.that(depositoA.hayCompanieras())
+	}
+	
+	test "Hay 2 pares de companieras" {
+		const bici5 = new Bici(largo=97,rodado=20,marca="Legnano")
+		depositoA.agregarBicis([bici5])
+		assert.that(depositoA.paresDeCompanieras().size() == 2)
+	}
+	
+	test "Bicis rapidas del deposito A y B" {
+		assert.equals(#{bici1, bici2}, depositoA.bicisRapidas().asSet())
+		assert.equals(#{bici1, bici2}, depositoB.bicisRapidas().asSet())
+	}
+	
+	test "Las marcas del deposito A y B" {
+		assert.equals(#{"Olmo", "Legnano"}, depositoA.marcas())
+		assert.equals(#{"Olmo", "Legnano"}, depositoB.marcas())
+	}
+	
+	test "El deposito A no es nocturno y el B lo es" {
+		assert.notThat(depositoA.esNocturno())
+		assert.that(depositoB.esNocturno())
+	}
+	
+}
