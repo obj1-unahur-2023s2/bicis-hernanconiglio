@@ -60,7 +60,8 @@ describe "Deposito de bicis" {
 	test "Hay 2 pares de companieras" {
 		const bici5 = new Bici(largo=97,rodado=20,marca="Legnano")
 		depositoA.agregarBicis([bici5])
-		assert.that(depositoA.paresDeCompanieras().size() == 2)
+		assert.that(depositoA.paresDeCompanieras().size() == 1)
+		
 	}
 	
 	test "Bicis rapidas del deposito A y B" {

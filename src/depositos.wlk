@@ -1,4 +1,5 @@
 import bicis.*
+import accesorios.*
 
 class Deposito {
 	const bicis = []
@@ -50,13 +51,13 @@ class Deposito {
 		return bicis.any { bici => self.bicisCompanierasDe(bici).isEmpty().negate() }
 	}
 	method paresDeCompanieras() {
-		const parejasDeBicis = []
+		const parejasDeBicis = #{}
 		bicis.forEach ({ bici => self.agregarBiciConParejaEn(bici,parejasDeBicis) })
 		return parejasDeBicis
 	}
 	method agregarBiciConParejaEn(unaBici,listaDeParejasDeBicis) {
 		if(self.hayCompanieraDe(unaBici))
-			listaDeParejasDeBicis.add([unaBici,self.biciCompanieraDe(unaBici)])
+			listaDeParejasDeBicis.add(#{unaBici,self.biciCompanieraDe(unaBici)})
 	}
 	method biciCompanieraDe(unaBici) {
 		return bicis.find({bici => bici.esCompanieraDe(unaBici)})
