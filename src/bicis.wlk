@@ -15,4 +15,12 @@ class Bici {
 	method esCompanieraDe(otraBici) {
 		return marca == otraBici.marca() and (largo - otraBici.largo()).abs() <= 10 and self != otraBici
 	}
+
+}
+
+class ParDeBicis {
+	const property companieras = #{}
+	method yaEstaElParDeBicis(unaBici,otraBici) {
+		return companieras.contains(unaBici) and companieras.contains(otraBici)
+	}
 }

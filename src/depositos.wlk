@@ -2,7 +2,7 @@ import bicis.*
 import accesorios.*
 
 class Deposito {
-	const bicis = []
+	const property bicis = []
 	
 	method agregarBicis(nuevasBicis) {
 		if(nuevasBicis.any { bici => bicis.contains(bici) } or nuevasBicis.any { bici => nuevasBicis.occurrencesOf(bici) > 1 } ) {
@@ -25,7 +25,7 @@ class Deposito {
 	method esNocturno() {
 		return bicis.all { bici => bici.tieneLuz() }
 	}
-	method esNocturno(coleccion) {
+	method esNocturnoSub(coleccion) {
 		return coleccion.all { bici => bici.tieneLuz() }
 	}
 	method algunaPuedeCargar(peso) {
@@ -50,23 +50,15 @@ class Deposito {
 	method hayCompanieras() {
 		return bicis.any { bici => self.bicisCompanierasDe(bici).isEmpty().negate() }
 	}
-	method paresDeCompanieras() {
-		const parejasDeBicis = #{}
-		bicis.forEach ({ bici => self.agregarBiciConParejaEn(bici,parejasDeBicis) })
-		return parejasDeBicis
-	}
-	method agregarBiciConParejaEn(unaBici,listaDeParejasDeBicis) {
-		if(self.hayCompanieraDe(unaBici))
-			listaDeParejasDeBicis.add(#{unaBici,self.biciCompanieraDe(unaBici)})
-	}
+
 	method biciCompanieraDe(unaBici) {
 		return bicis.find({bici => bici.esCompanieraDe(unaBici)})
 	}
 	method hayCompanieraDe(unaBici) {
-		return self.bicisCompanierasDe(unaBici).size() > 0
+		return !self.bicisCompanierasDe(unaBici).isEmpty()
 	}
 	method seHizoLaLuz() {
-		return self.hayAlgunaBiciConLuz() and self.esNocturno(bicis.drop(self.indicePrimeraBiciConLuz()))
+		return self.hayAlgunaBiciConLuz() and self.esNocturnoSub(bicis.drop(self.indicePrimeraBiciConLuz()))
 	}
 	method hayAlgunaBiciConLuz() {
 		return bicis.any { bici => bici.tieneLuz() }
@@ -74,4 +66,24 @@ class Deposito {
 	method indicePrimeraBiciConLuz() {
     	return (0..bicis.size()-1).find { indice => bicis.get(indice).tieneLuz() }
 	}
+	
+	method paresDeCompanieras() {
+		const companieras = #{}
+		bicis.forEach({b=> 
+			if(self.hayCompanieraDe(b)) {
+				self.agregarParDeBicis(b,companieras)
+			}
+		})
+		return companieras
+	}
+	
+	method agregarParDeBicis(bici,paresCompanieras) {
+		self.bicisCompanierasDe(bici).forEach({c=>
+			if(!paresCompanieras.any({pb=>pb.yaEstaElParDeBicis(bici,c)})) {
+				paresCompanieras.add(new ParDeBicis(companieras=#{bici,c}))
+			}
+		})
+	} 
+	
+
 }
