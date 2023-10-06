@@ -1,9 +1,9 @@
 import accesorios.*
 
 class Bici {
-	const rodado = 26
-	const property largo = 120
-	const property marca = "olmo"
+	const rodado
+	const property largo
+	const property marca
 	const property accesorios = []
 	
 	method altura() = rodado * 2.5 + 15

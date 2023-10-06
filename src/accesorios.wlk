@@ -13,7 +13,7 @@ class Canasto {
 
 class Morral {
 	const largo
-	var property tieneOjoDeGato = true
+	const tieneOjoDeGato
 	
 	method esLuminoso() = tieneOjoDeGato
 	method peso() = 1.2
